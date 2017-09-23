@@ -100,4 +100,16 @@ describe('Flow Processor', () => {
       expect(callback.mock.calls[1][1]).toBeFalsy();
     });
   });
+
+  describe('when the flow is empty', () => {
+    beforeEach(() => { process([], callback) });
+
+    it('it doesn\'t call the callback', () => {
+      expect(callback.mock.calls.length).toEqual(0);
+    });
+  });
+
+  it('it doesn\'t explode if the callback is not a function', () => {
+    expect(process([])).not.toThrow();
+  });
 });
