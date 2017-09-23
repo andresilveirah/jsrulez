@@ -27,7 +27,7 @@ describe('Flow Processor', () => {
     });
 
     it('calls the callback for each rule', () => {
-      expect(callback.mock.calls.length).toBe(2);
+      expect(callback).toHaveBeenCalledTimes(2);
     });
 
     it('passes the current rule for the callback for each executed rule', () => {
@@ -75,7 +75,7 @@ describe('Flow Processor', () => {
     });
 
     it('calls the callback for each rule', () => {
-      expect(callback.mock.calls.length).toBe(2);
+      expect(callback).toHaveBeenCalledTimes(2);
     });
 
     it('passes the current rule for the callback for each executed rule', () => {
@@ -105,11 +105,25 @@ describe('Flow Processor', () => {
     beforeEach(() => { process([], callback) });
 
     it('it doesn\'t call the callback', () => {
-      expect(callback.mock.calls.length).toEqual(0);
+      expect(callback).toHaveBeenCalledTimes(0);
     });
   });
 
-  it('it doesn\'t explode if the callback is not a function', () => {
-    expect(process([])).not.toThrow();
+  describe('when the callback is not a function', () => {
+    let processWithoutCallback;
+
+    beforeEach(() => {
+      processWithoutCallback = () => process([{
+        id: 2,
+        title: "Last Rule",
+        body: "false",
+        idIfTrue: null,
+        idIfFalse: null
+      }])
+    });
+
+    it('it doesn\'t explode', () => {
+      expect(processWithoutCallback).not.toThrow();
+    });
   });
 });
