@@ -1,0 +1,34 @@
+{
+  "name": "jsrulez",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A simple rule processor written in Javascript using React as view layer",
+  "homepage": "http://codebikeandmore.com/jsrulez",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andresilveira/jsrulez.git"
+  },
+  "keywords": [
+    "javascript",
+    "react"
+  ],
+  "author": "André Herculano",
+  "license": "GNU ",
+  "bugs": {
+    "url": "https://github.com/andresilveira/yato/issues"
+  },
+  "dependencies": {
+    "gh-pages": "^1.0.0",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-scripts": "1.0.13"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "predeploy": "react-scripts build",
+    "deploy": "gh-pages -d build",
+    "eject": "react-scripts eject"
+  }
+}
