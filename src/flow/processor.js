@@ -1,6 +1,6 @@
 /*
-  The process function receives a Flow and a callback.
-  A Flow is an array of Rules. Each Rule has the following format:
+  The processor function generator receives a Flow and yields each rule it
+  evaluates. A Flow is an array of Rules. Each Rule has the following format:
     {
       id: 1,
       title: "First Rule",
@@ -16,20 +16,20 @@
   ids to be fallowed (idIfTrue or idIfFalse) is null, the execution is finished.
 */
 
-const process = (flow, callback) => {
+export default function* process(flow) {
   if(invalidFlow(flow)) { return; }
 
-  runForestRun(flow, flow[0], callbackify(callback));
-};
+  yield* runForestRun(flow, flow[0]);
+}
 
-const runForestRun = (flow, currentRule, callback) => {
+function* runForestRun(flow, currentRule) {
   if(currentRule === null) { return; }
 
   const passed = executeBody(currentRule.body);
 
-  callback(currentRule, passed);
-  runForestRun(flow, nextRule(flow, currentRule, passed), callback);
-};
+  yield({ currentRule, passed });
+  yield* runForestRun(flow, nextRule(flow, currentRule, passed));
+}
 
 const nextRule = (flow, currentRule, passed) =>
   findRule(flow, pickId(currentRule, passed))
@@ -40,11 +40,4 @@ const findRule = (flow, id) => flow.find(rule => rule.id === id) || null;
 
 const executeBody = (body) => eval(body);
 
-const callbackify = (maybeFunction) =>
-  Object.prototype.toString.call(maybeFunction) === '[object Function]' ?
-  maybeFunction :
-  () => {};
-
 const invalidFlow = (flow) => !Array.isArray(flow) || flow.length === 0;
-
-export { process };
