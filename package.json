@@ -1,6 +1,6 @@
 {
   "name": "jsrulez",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "private": true,
   "description": "A simple rule processor written in Javascript using React as view layer",
   "homepage": "http://codebikeandmore.com/jsrulez",
@@ -31,9 +31,9 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
-    "eslint": "^4.7.2",
     "enzyme": "^3.0.0",
     "enzyme-adapter-react-15": "^1.0.0",
+    "eslint": "^4.7.2",
     "gh-pages": "^1.0.0",
     "jest-enzyme": "^4.0.0",
     "react-test-renderer": "^15.6.2"
