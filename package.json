@@ -18,9 +18,8 @@
     "url": "https://github.com/andresilveira/yato/issues"
   },
   "dependencies": {
-    "gh-pages": "^1.0.0",
-    "react": "^15.6.1",
-    "react-dom": "^15.6.1",
+    "react": "^15.6.2",
+    "react-dom": "^15.6.2",
     "react-scripts": "1.0.13"
   },
   "scripts": {
@@ -32,6 +31,11 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
-    "eslint": "^4.7.2"
+    "eslint": "^4.7.2",
+    "enzyme": "^3.0.0",
+    "enzyme-adapter-react-15": "^1.0.0",
+    "gh-pages": "^1.0.0",
+    "jest-enzyme": "^4.0.0",
+    "react-test-renderer": "^15.6.2"
   }
 }
