@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import CreateRuleForm from './CreateRuleForm';
+import RulesList from './RulesList';
 
 import './App.css';
 
@@ -22,29 +23,7 @@ class App extends Component {
       <div className="App">
         <h1>JS RULEZ</h1>
         <CreateRuleForm onCreateRule={this.addRuleToFlow} />
-        <div>
-          <h2>2. Rules list</h2>
-          <ul>
-            <li>
-              <div>
-                <span>Rule 1</span>
-                <a href="x">&times;</a>
-              </div>
-            </li>
-            <li>
-              <div>
-                <span>Rule 2</span>
-                <a href="x">&times;</a>
-              </div>
-            </li>
-            <li>
-              <div>
-                <span>Rule 3</span>
-                <a href="x">&times;</a>
-              </div>
-            </li>
-          </ul>
-        </div>
+        <RulesList rules={this.state.flow} />
         <div>
           <h2>3. Execute flow</h2>
           <form action="#">

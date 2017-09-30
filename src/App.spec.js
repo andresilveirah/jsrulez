@@ -2,6 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 
 import CreateRuleForm from './CreateRuleForm';
+import RulesList from './RulesList';
 import App from './App';
 
 describe('App', () => {
@@ -21,5 +22,9 @@ describe('App', () => {
 
   it('contains a CreateRuleForm component', () => {
     expect(app).toContainReact(<CreateRuleForm onCreateRule={addRuleToFlow} />);
+  });
+
+  it('contains a RulesList component', () => {
+    expect(app).toContainReact(<RulesList rules={[]} />);
   });
 });
