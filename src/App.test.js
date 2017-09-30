@@ -1,8 +1,25 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { shallow } from 'enzyme';
+
+import CreateRuleForm from './CreateRuleForm';
 import App from './App';
 
-it('renders without crashing', () => {
-  const div = document.createElement('div');
-  ReactDOM.render(<App />, div);
+describe('App', () => {
+  let app, addRuleToFlow;
+
+  beforeEach(() => {
+    app = shallow(<App />);
+    addRuleToFlow = app.instance().addRuleToFlow;
+  });
+
+  describe('addRuleToFlow', () => {
+    it('adds a new rule to its flow state', () => {
+      addRuleToFlow('I am a rule');
+      expect(app).toHaveState('flow', ['I am a rule']);
+    });
+  });
+
+  it('contains a CreateRuleForm component', () => {
+    expect(app).toContainReact(<CreateRuleForm onCreateRule={addRuleToFlow} />);
+  });
 });
