@@ -6,11 +6,12 @@ import RulesList from './RulesList';
 import App from './App';
 
 describe('App', () => {
-  let app, addRuleToFlow;
+  let app, addRuleToFlow, removeRuleFromFlow;
 
   beforeEach(() => {
     app = shallow(<App />);
     addRuleToFlow = app.instance().addRuleToFlow;
+    removeRuleFromFlow = app.instance().removeRuleFromFlow;
   });
 
   describe('addRuleToFlow', () => {
@@ -20,11 +21,20 @@ describe('App', () => {
     });
   });
 
+  describe('removeRuleFromFlow', () => {
+    it('well... removes a rule from the flow state', () => {
+      addRuleToFlow({ id: 1 });
+      addRuleToFlow({ id: 2 });
+      removeRuleFromFlow(2);
+      expect(app).toHaveState('flow', [{ id: 1 }]);
+    });
+  });
+
   it('contains a CreateRuleForm component', () => {
     expect(app).toContainReact(<CreateRuleForm onCreateRule={addRuleToFlow} />);
   });
 
   it('contains a RulesList component', () => {
-    expect(app).toContainReact(<RulesList rules={[]} />);
+    expect(app).toContainReact(<RulesList rules={[]} onRemoveClick={removeRuleFromFlow} />);
   });
 });

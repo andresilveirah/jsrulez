@@ -10,6 +10,7 @@ class App extends Component {
     super();
     this.state = { flow: [] };
     this.addRuleToFlow = this.addRuleToFlow.bind(this);
+    this.removeRuleFromFlow = this.removeRuleFromFlow.bind(this);
   }
 
   addRuleToFlow(rule) {
@@ -18,12 +19,18 @@ class App extends Component {
     });
   }
 
+  removeRuleFromFlow(ruleId) {
+    this.setState({
+      flow: this.state.flow.filter(({ id }) => id !== ruleId)
+    });
+  }
+
   render() {
     return (
       <div className="App">
         <h1>JS RULEZ</h1>
         <CreateRuleForm onCreateRule={this.addRuleToFlow} />
-        <RulesList rules={this.state.flow} />
+        <RulesList rules={this.state.flow} onRemoveClick={this.removeRuleFromFlow} />
         <div>
           <h2>3. Execute flow</h2>
           <form action="#">
