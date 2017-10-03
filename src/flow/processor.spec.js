@@ -1,44 +1,34 @@
 import flowProcessor from './processor';
 
 describe('Flow Processor', () => {
-  let flow, processor;
+  let flow, processor, evaluator, testingObject, firstRule, secondRule;
 
   describe('follows the idIfTrue if the rule\'s body returns true', () => {
     beforeEach(() => {
-      flow = [
-        {
-          id: 1,
-          title: "First Rule",
-          body: "true",
-          idIfTrue: 2,
-          idIfFalse: null
-        },
-        {
-          id: 2,
-          title: "Last Rule",
-          body: "false",
-          idIfTrue: null,
-          idIfFalse: null
-        }
-      ];
-      processor = flowProcessor(flow);
+      firstRule = {
+        id: 1,
+        title: "First Rule",
+        body: "body of the first rule",
+        idIfTrue: 2,
+        idIfFalse: null
+      };
+      secondRule = {
+        id: 2,
+        title: "Last Rule",
+        body: "body of the last rule",
+        idIfTrue: null,
+        idIfFalse: null
+      };
+      flow = [ firstRule, secondRule];
+      evaluator = jest.fn();
+      evaluator.mockReturnValueOnce(true).mockReturnValueOnce(false);
+      testingObject = { foo: 'bar' };
+      processor = flowProcessor(evaluator)(flow)(testingObject);
     });
 
     it('yields the current rule for the each executed rule', () => {
-      expect(processor.next().value.currentRule).toEqual({
-        id: 1,
-        title: "First Rule",
-        body: "true",
-        idIfTrue: 2,
-        idIfFalse: null
-      });
-      expect(processor.next().value.currentRule).toEqual({
-        id: 2,
-        title: "Last Rule",
-        body: "false",
-        idIfTrue: null,
-        idIfFalse: null
-      });
+      expect(processor.next().value.currentRule).toEqual(firstRule);
+      expect(processor.next().value.currentRule).toEqual(secondRule);
       expect(processor.next().value).toBeUndefined();
     });
 
@@ -47,44 +37,41 @@ describe('Flow Processor', () => {
       expect(processor.next().value.passed).toBeFalsy();
       expect(processor.next().value).toBeUndefined();
     });
+
+    it('calls the evaluator function passing the body of for each evaluated rule and the testingObject', () => {
+      processor.next();
+      expect(evaluator).toHaveBeenCalledWith("body of the first rule", testingObject);
+      processor.next();
+      expect(evaluator).toHaveBeenCalledWith("body of the last rule", testingObject);
+    });
   });
 
   describe('follows the idIfFalse if the rule\'s body returns false', () => {
     beforeEach(() => {
-      flow = [
-        {
-          id: 1,
-          title: "First Rule",
-          body: "false",
-          idIfTrue: null,
-          idIfFalse: 2
-        },
-        {
-          id: 2,
-          title: "Last Rule",
-          body: "false",
-          idIfTrue: null,
-          idIfFalse: null
-        }
-      ];
-      processor = flowProcessor(flow);
+      firstRule = {
+        id: 1,
+        title: "First Rule",
+        body: "body of the first rule",
+        idIfTrue: null,
+        idIfFalse: 2
+      };
+      secondRule = {
+        id: 2,
+        title: "Last Rule",
+        body: "body of the last rule",
+        idIfTrue: null,
+        idIfFalse: null
+      };
+      flow = [ firstRule, secondRule];
+      evaluator = jest.fn();
+      evaluator.mockReturnValueOnce(false).mockReturnValueOnce(false);
+      testingObject = { foo: 'bar' };
+      processor = flowProcessor(evaluator)(flow)(testingObject);
     });
 
     it('yields the current rule for the each executed rule', () => {
-      expect(processor.next().value.currentRule).toEqual({
-        id: 1,
-        title: "First Rule",
-        body: "false",
-        idIfTrue: null,
-        idIfFalse: 2
-      });
-      expect(processor.next().value.currentRule).toEqual({
-        id: 2,
-        title: "Last Rule",
-        body: "false",
-        idIfTrue: null,
-        idIfFalse: null
-      });
+      expect(processor.next().value.currentRule).toEqual(firstRule);
+      expect(processor.next().value.currentRule).toEqual(secondRule);
       expect(processor.next().value).toBeUndefined();
     });
 
@@ -96,8 +83,12 @@ describe('Flow Processor', () => {
   });
 
   describe('when the flow is empty', () => {
+    beforeEach(() => {
+      processor = flowProcessor(() => {})([])({});
+    });
+
     it('it yields undefined', () => {
-      expect(flowProcessor([]).next().value).toBeUndefined();
+      expect(processor.next().value).toBeUndefined();
     });
   });
 });
