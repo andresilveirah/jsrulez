@@ -3,13 +3,15 @@ import { shallow } from 'enzyme';
 
 import CreateRuleForm from './CreateRuleForm';
 import RulesList from './RulesList';
+import FlowExecutor from './FlowExecutor';
 import App from './App';
 
 describe('App', () => {
-  let app, addRuleToFlow, removeRuleFromFlow;
+  let app, addRuleToFlow, removeRuleFromFlow, flowEngine;
 
   beforeEach(() => {
-    app = shallow(<App />);
+    flowEngine = () => {};
+    app = shallow(<App flowEngine={flowEngine} />);
     addRuleToFlow = app.instance().addRuleToFlow;
     removeRuleFromFlow = app.instance().removeRuleFromFlow;
   });
@@ -36,5 +38,9 @@ describe('App', () => {
 
   it('contains a RulesList component', () => {
     expect(app).toContainReact(<RulesList rules={[]} onRemoveClick={removeRuleFromFlow} />);
+  });
+
+  it('contains a FlowExecutor component', () => {
+    expect(app).toContainReact(<FlowExecutor engine={flowEngine([])} />);
   });
 });
