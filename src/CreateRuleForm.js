@@ -36,8 +36,13 @@ class CreateRuleForm extends PureComponent {
 
             <Field name="title" placeholder="A nice title" onChange={this.onFieldChange} />
             <Field name="id" placeholder="ex. 1" onChange={this.onFieldChange} />
-            <Field name="body" placeholder="ex. 1">
-              <textarea name="body" placeholder="// a nice an clean javascript function here" defaultValue="" onChange={this.onFieldChange} />
+            <Field name="body">
+              <textarea
+                name="body"
+                placeholder="// a nice an clean javascript function here"
+                defaultValue=""
+                onChange={this.onFieldChange}
+              />
             </Field>
             <Field name="idIfTrue" label="Id if it passes" placeholder="ex. 2" onChange={this.onFieldChange} />
             <Field name="idIfFalse" label="Id if it fails" placeholder="ex. 3" onChange={this.onFieldChange} />
