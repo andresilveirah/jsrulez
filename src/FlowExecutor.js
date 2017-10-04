@@ -22,8 +22,10 @@ class FlowExecutor extends PureComponent {
     return (
       <div>
         <h2>3. Execute flow</h2>
-        <ExecuteFlowForm onExecuteFlow={this.onExecuteFlow} />
-        <ResultsList results={this.state.results} />
+        <div className='section'>
+          <ExecuteFlowForm onExecuteFlow={this.onExecuteFlow} />
+          <ResultsList results={this.state.results} />
+        </div>
       </div>
     );
   }

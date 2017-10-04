@@ -14,10 +14,6 @@ html, body {
   padding: 1em;
 }
 
-.flex-grid {
-  display: flex;
-}
-
 .flex-grid-thirds {
   display: flex;
 }
