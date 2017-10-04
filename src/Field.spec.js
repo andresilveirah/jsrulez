@@ -39,7 +39,9 @@ describe('Field', () => {
     describe('when no children is passed', () => {
       it('renders an input passing down the prop name and anything else different than name, children and label', () => {
         const field = shallow(<Field name="attributeName" placeholder="just holding place" />);
-        expect(field).toContainReact(<input type="text" name="attributeName" placeholder="just holding place" />);
+        expect(field.containsMatchingElement(
+          <input type="text" name="attributeName" placeholder="just holding place" />
+        )).toBeTruthy();
       });
     });
   });

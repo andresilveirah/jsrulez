@@ -2,6 +2,8 @@ import React, { PureComponent } from 'react';
 
 import Field from './Field';
 
+import './CreateRuleForm.css';
+
 class CreateRuleForm extends PureComponent {
   constructor(props) {
     super();
@@ -30,26 +32,33 @@ class CreateRuleForm extends PureComponent {
     return (
       <div>
         <h2>1. Create flow</h2>
-        <form action="#" onSubmit={this.onCreateRule} ref={(form) => { this.form = form; }}>
-          <fieldset>
-            <legend>New Rule</legend>
+        <div className='section'>
+          <form action="#" onSubmit={this.onCreateRule} ref={(form) => { this.form = form; }}>
+            <fieldset className='CreateRuleForm-fieldset'>
+              <legend>New Rule</legend>
 
-            <Field name="title" placeholder="A nice title" onChange={this.onFieldChange} />
-            <Field name="id" placeholder="ex. 1" onChange={this.onFieldChange} />
-            <Field name="body">
-              <textarea
-                name="body"
-                placeholder="// a nice an clean javascript function here"
-                defaultValue=""
-                onChange={this.onFieldChange}
-              />
-            </Field>
-            <Field name="idIfTrue" label="Id if it passes" placeholder="ex. 2" onChange={this.onFieldChange} />
-            <Field name="idIfFalse" label="Id if it fails" placeholder="ex. 3" onChange={this.onFieldChange} />
-
-            <input type="submit" name="create" value="Add new rule" />
-          </fieldset>
-        </form>
+              <Field name="title" placeholder="A nice title" onChange={this.onFieldChange} />
+              <Field name="id" placeholder="ex. 1" onChange={this.onFieldChange} />
+              <Field name="body">
+                <textarea
+                  className="Field-input col2"
+                  rows="5"
+                  name="body"
+                  placeholder="// a nice an clean javascript function here"
+                  defaultValue=""
+                  onChange={this.onFieldChange}
+                />
+              </Field>
+              <Field name="idIfTrue" label="Id if it passes" placeholder="ex. 2" onChange={this.onFieldChange} />
+              <Field name="idIfFalse" label="Id if it fails" placeholder="ex. 3" onChange={this.onFieldChange} />
+              <Field name="create" label=" ">
+                <div className="CreateRuleForm-submit-container">
+                  <input className='CreateRuleForm-submit col2' type="submit" name="create" value="Add new rule" />
+                </div>
+              </Field>
+            </fieldset>
+          </form>
+        </div>
       </div>
     );
   }
