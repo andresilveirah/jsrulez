@@ -14,10 +14,20 @@ describe('RulesList', () => {
 
   it('renders a li element for each rule in its rules prop', () => {
     expect(rulesList.containsMatchingElement(
-      <li>a<button>&times;</button></li>
+      <li>
+        <span>a</span>
+        <div>
+          <button>&times;</button>
+        </div>
+      </li>
     )).toBeTruthy();
     expect(rulesList.containsMatchingElement(
-      <li>b<button>&times;</button></li>
+      <li>
+        <span>a</span>
+        <div>
+          <button>&times;</button>
+        </div>
+      </li>
     )).toBeTruthy();
   });
 

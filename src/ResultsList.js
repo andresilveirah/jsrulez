@@ -1,19 +1,27 @@
 import React from 'react';
 
+import ResultsItem from './ResultsItem';
+
+import './ResultsList.css';
+
 const ResultsList = ({ results }) => (
-  <div>
-    <div>
-      Results
+  <div className='ResultsList flex-grid-thirds'>
+    <div className='ResultsList-header col1'>
+      <strong>Results</strong>
     </div>
-    <div>
-      <ul>
+    <div className='col2'>
+      <ul className='ResultsList-items'>
         { results.map(({rule, passed}) =>
-          <li key={`result-rule-${rule.id}`}>
-            {rule.title} {passed ? 'passed' : 'failed' }
-          </li>
+          <ResultsItem
+            key={`result-rule-${rule.id}`}
+            label={rule.title}
+            passed={passed}
+          />
         )}
       </ul>
-      { results.length > 0 && "END." }
+      <div className='ResultsList-footer'>
+        { results.length > 0 && "END." }
+      </div>
     </div>
   </div>
 );

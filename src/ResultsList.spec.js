@@ -2,6 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 
 import ResultsList from './ResultsList';
+import ResultsItem from './ResultsItem';
 
 describe('ResultsList', () => {
   let results, resultsList;
@@ -12,7 +13,7 @@ describe('ResultsList', () => {
     });
 
     it('does not render the word END', () => {
-      expect(resultsList.text()).not.toContain('END.');
+      expect(resultsList).not.toIncludeText('END.');
     });
   });
 
@@ -26,9 +27,9 @@ describe('ResultsList', () => {
     });
 
     it('renders a li element for each rule in its results prop', () => {
-      expect(resultsList).toContainReact(<li>rule 1 passed</li>);
-      expect(resultsList).toContainReact(<li>rule 2 failed</li>);
-      expect(resultsList.text()).toContain('END.');
+      expect(resultsList).toContainReact(<ResultsItem label='rule 1' passed={true} />);
+      expect(resultsList).toContainReact(<ResultsItem label='rule 2' passed={false} />);
+      expect(resultsList).toIncludeText('END.');
     });
   });
 });
