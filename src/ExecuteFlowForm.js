@@ -2,6 +2,8 @@ import React, { PureComponent } from 'react';
 
 import Field from './Field';
 
+import './ExecuteFlowForm.css';
+
 class ExecuteFlowForm extends PureComponent {
   constructor() {
     super();
@@ -20,13 +22,19 @@ class ExecuteFlowForm extends PureComponent {
       <form action="#" onSubmit={this.onSubmit}>
         <Field name="testingObject" label="Object">
           <textarea
+            className='col2 Field-input'
+            rows='5'
             name="testingObject"
             placeholder="// a cool JSON string here please"
             defaultValue=""
             ref={(textarea) => this.objectText = textarea}
           />
         </Field>
-        <input type="submit" name="execute" value="Execute flow" />
+        <Field name="execute" label=" ">
+          <div className="ExecuteFlowForm-submit-container">
+            <input className='ExecuteFlowForm-submit col2' type="submit" value="Execute flow" />
+          </div>
+        </Field>
       </form>
     );
   }
