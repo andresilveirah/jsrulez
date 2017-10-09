@@ -1,18 +1,21 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
+import ValidatorMessage from './ValidatorMessage';
+
 import CreateRuleForm from './CreateRuleForm';
 import RulesList from './RulesList';
 import FlowExecutor from './FlowExecutor';
 import App from './App';
 
 describe('App', () => {
-  let app, addRuleToFlow, removeRuleFromFlow, flowEngine;
+  let app, addRuleToFlow, removeRuleFromFlow, flowEngine, ruleValidator;
 
   beforeEach(() => {
     flowEngine = () => {};
     app = shallow(<App flowEngine={flowEngine} />);
     addRuleToFlow = app.instance().addRuleToFlow;
+    ruleValidator = app.instance().validateFlowCycle;
     removeRuleFromFlow = app.instance().removeRuleFromFlow;
   });
 
@@ -33,14 +36,61 @@ describe('App', () => {
   });
 
   it('contains a CreateRuleForm component', () => {
-    expect(app).toContainReact(<CreateRuleForm onCreateRule={addRuleToFlow} />);
+    expect(app).toContainReact(
+      <CreateRuleForm
+        onCreateRule={addRuleToFlow}
+        ruleValidator={ruleValidator}
+        ruleErrorMessage={<ValidatorMessage message={null} />}
+      />
+    );
   });
 
   it('contains a RulesList component', () => {
-    expect(app).toContainReact(<RulesList rules={[]} onRemoveClick={removeRuleFromFlow} />);
+    expect(app).toContainReact(
+      <RulesList rules={[]} onRemoveClick={removeRuleFromFlow} />
+    );
   });
 
   it('contains a FlowExecutor component', () => {
-    expect(app).toContainReact(<FlowExecutor engine={flowEngine([])} />);
+    expect(app).toContainReact(
+      <FlowExecutor engine={flowEngine([])} />
+    );
+  });
+});
+
+describe('App', () => {
+  describe('validateFlowCycle', () => {
+    let flowValidator, app;
+
+    describe('when the flowValidator returns { valid: true }', () => {
+      beforeEach(() => {
+        flowValidator = () => ({ valid: true });
+        app = shallow(<App flowValidator={flowValidator} flowEngine={() => {}} />);
+      });
+
+      it('returns true', () => {
+        expect(app.instance().validateFlowCycle()).toBeTruthy();
+      });
+
+      it('sets the error state to null', () => {
+        expect(app).toHaveState('error', null);
+      });
+    });
+
+    describe('when the flowValidator returns { valid: false }', () => {
+      beforeEach(() => {
+        flowValidator = () => ({ valid: false, message: 'a error message' });
+        app = shallow(<App flowValidator={flowValidator} flowEngine={() => {}} />);
+      });
+
+      it('returns false', () => {
+        expect(app.instance().validateFlowCycle()).toBeFalsy();
+      });
+
+      it('sets the error state to the message coming from the validator', () => {
+        app.instance().validateFlowCycle();
+        expect(app).toHaveState('error', 'a error message');
+      });
+    });
   });
 });
