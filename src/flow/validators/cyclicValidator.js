@@ -1,4 +1,4 @@
-import validator from '../validators';
+import validator from '../../validators';
 
 // The cyclicValidator (what a great name by the way), visits each rule
 // recursively. Starting at the rules corresponding to "idIfTrue" and proceeding
@@ -19,7 +19,7 @@ export default (flow) => {
     if(visitedIds.indexOf(id) !== -1) {
       return validator(
         false,
-        `The rule "${title}" with id "${id} is part of a cycle in the flow."`
+        `The rule "${title}" with id "${id}" is part of a cycle in the flow.`
       );
     }
 

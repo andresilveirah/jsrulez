@@ -36,4 +36,16 @@ describe('cyclicValidator', () => {
       expect([]).toBeValidWith(cyclicValidator);
     });
   });
+
+  describe('when the flow has only one rule', () => {
+    beforeEach(() => {
+      flow = [
+        { id: 1, idIfTrue: 2, idIfFalse: null }
+      ];
+    });
+
+    it('returns true', () => {
+      expect(flow).toBeValidWith(cyclicValidator);
+    });
+  });
 });
