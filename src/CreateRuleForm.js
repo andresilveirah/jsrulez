@@ -20,8 +20,10 @@ class CreateRuleForm extends PureComponent {
 
   onCreateRule(event) {
     event.preventDefault();
-    this.form.reset();
-    this.props.onCreateRule(this.state);
+    if(this.props.ruleValidator(this.state)) {
+      this.form.reset();
+      this.props.onCreateRule(this.state);
+    };
   }
 
   onFieldChange(event) {
@@ -53,6 +55,7 @@ class CreateRuleForm extends PureComponent {
               <Field name="idIfFalse" label="Id if it fails" placeholder="ex. 3" onChange={this.onFieldChange} />
               <Field name="create" label=" ">
                 <div className="CreateRuleForm-submit-container">
+                  {this.props.ruleErrorMessage}
                   <input className='CreateRuleForm-submit col2' type="submit" name="create" value="Add new rule" />
                 </div>
               </Field>

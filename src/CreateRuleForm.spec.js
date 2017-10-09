@@ -7,12 +7,12 @@ import Field from './Field';
 describe('CreateRuleForm', () => {
   let createRuleForm, onFieldChange;
 
-  beforeEach(() => {
-    createRuleForm = shallow(<CreateRuleForm />);
-    onFieldChange = createRuleForm.instance().onFieldChange;
-  });
-
   describe('contain Fields for', () => {
+    beforeEach(() => {
+      createRuleForm = shallow(<CreateRuleForm />);
+      onFieldChange = createRuleForm.instance().onFieldChange;
+    });
+
     ['title', 'id', 'idIfTrue', 'idIfFalse'].forEach(attributeName =>
       it(attributeName, () => {
         expect(createRuleForm.containsMatchingElement(
@@ -44,23 +44,53 @@ describe('CreateRuleForm', () => {
       event = { preventDefault: jest.fn() };
       formMock = { reset: jest.fn() };
       onCreateRuleMock = jest.fn();
-      createRuleForm = shallow(<CreateRuleForm onCreateRule={onCreateRuleMock} />);
-      createRuleForm.instance().form = formMock;
-      onCreateRule = createRuleForm.instance().onCreateRule;
-      onCreateRule(event);
     });
 
-    it('resets the form', () => {
-      expect(formMock.reset).toHaveBeenCalled();
+    describe('when ruleValidator returns true', () => {
+      beforeEach(() => {
+        createRuleForm = shallow(
+          <CreateRuleForm
+            onCreateRule={onCreateRuleMock}
+            ruleValidator={() => true}
+          />);
+        createRuleForm.instance().form = formMock;
+        onCreateRule = createRuleForm.instance().onCreateRule;
+        onCreateRule(event);
+      });
+
+      it('resets the form', () => {
+        expect(formMock.reset).toHaveBeenCalled();
+      });
+
+      it('calls the onCreateRule prop passing a new rule to it', () => {
+        expect(onCreateRuleMock).toHaveBeenCalledWith({
+          title: '',
+          id: '',
+          idIfTrue: '',
+          idIfFalse: '',
+          body: ''
+        });
+      });
     });
 
-    it('calls the onCreateRule prop passing a new rule to it', () => {
-      expect(onCreateRuleMock).toHaveBeenCalledWith({
-        title: '',
-        id: '',
-        idIfTrue: '',
-        idIfFalse: '',
-        body: ''
+    describe('when ruleValidator returns false', () => {
+      beforeEach(() => {
+        createRuleForm = shallow(
+          <CreateRuleForm
+            onCreateRule={onCreateRuleMock}
+            ruleValidator={() => false}
+          />);
+        createRuleForm.instance().form = formMock;
+        onCreateRule = createRuleForm.instance().onCreateRule;
+        onCreateRule(event);
+      });
+
+      it('does not reset the form', () => {
+        expect(formMock.reset).not.toHaveBeenCalled();
+      });
+
+      it('does not call call the onCreateRule prop', () => {
+        expect(onCreateRuleMock).not.toHaveBeenCalled();
       });
     });
   });
