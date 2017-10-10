@@ -43,19 +43,23 @@ class CreateRuleForm extends PureComponent {
               <Field name="id" placeholder="ex. 1" onChange={this.onFieldChange} />
               <Field name="body">
                 <textarea
-                  className="Field-input col2"
+                  className="Field-input col3"
                   rows="5"
                   name="body"
-                  placeholder="// a nice an clean javascript function here"
+                  placeholder={`
+                    // a nice an clean javascript function here, like:
+                    function(obj) {
+                      return obj.foo === 'bar';
+                    }
+                  `}
                   defaultValue=""
                   onChange={this.onFieldChange}
                 />
               </Field>
               <Field name="idIfTrue" label="Id if it passes" placeholder="ex. 2" onChange={this.onFieldChange} />
               <Field name="idIfFalse" label="Id if it fails" placeholder="ex. 3" onChange={this.onFieldChange} />
-              <Field name="create" label=" ">
+              <Field name="create" label="" errorMessage={this.props.ruleErrorMessage}>
                 <div className="CreateRuleForm-submit-container">
-                  {this.props.ruleErrorMessage}
                   <input className='CreateRuleForm-submit col2' type="submit" name="create" value="Add new rule" />
                 </div>
               </Field>
