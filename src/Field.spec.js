@@ -1,6 +1,8 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
+import ValidatorMessage from './ValidatorMessage';
+
 import Field from './Field';
 
 describe('Field', () => {
@@ -26,6 +28,15 @@ describe('Field', () => {
         const field = shallow(<Field label="Hello there" name="I'm invisible" />);
         expect(field).toHaveText("Hello there");
         expect(field).not.toHaveText("I'm invisible");
+      });
+    });
+
+    describe('and the prop errorMessage is present', () => {
+      it('renders a ValidatorMessage for it', () => {
+        const field = shallow(<Field errorMessage='Oh noes, error.' />);
+        expect(field).toContainReact(
+          <ValidatorMessage message='Oh noes, error.' />
+        );
       });
     });
 
