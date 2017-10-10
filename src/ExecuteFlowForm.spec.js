@@ -7,11 +7,11 @@ import Field from './Field';
 describe('ExecuteFlowForm', () => {
   let executeFlowForm;
 
-  beforeEach(() => {
-    executeFlowForm = shallow(<ExecuteFlowForm />);
-  });
+  describe('contains Field for', () => {
+    beforeEach(() => {
+      executeFlowForm = shallow(<ExecuteFlowForm />);
+    });
 
-  describe('contain Fields for', () => {
     it('testingObject', () => {
       expect(executeFlowForm.containsMatchingElement(
         <Field name='testingObject' label='Object'>
@@ -21,19 +21,43 @@ describe('ExecuteFlowForm', () => {
     })
   });
 
-  describe('onExecuteFlow', () => {
+  describe('onSubmit', () => {
     let onExecuteFlowMock, jsonString;
+    beforeEach(() => { onExecuteFlowMock = jest.fn(); });
 
-    beforeEach(() => {
-      jsonString = '{"foo":"bar"}';
-      onExecuteFlowMock = jest.fn();
-      executeFlowForm = shallow(<ExecuteFlowForm onExecuteFlow={onExecuteFlowMock} />);
-      executeFlowForm.instance().objectText = { value: jsonString };
-      executeFlowForm.find('form').simulate('submit', { preventDefault: () => {} });
+    describe('when the json string is valid', () => {
+      beforeEach(() => {
+        jsonString = '{"foo":"bar"}';
+        executeFlowForm = shallow(<ExecuteFlowForm onExecuteFlow={onExecuteFlowMock} />);
+        executeFlowForm.instance().objectText = { value: jsonString };
+        executeFlowForm.find('form').simulate('submit', { preventDefault: () => {} });
+      });
+
+      it('calls the onExecuteFlow prop passing the parsed JSON coming from the testingObject field', () => {
+        expect(onExecuteFlowMock).toHaveBeenCalledWith({ foo: 'bar' });
+      });
+
+      it('resets the errorMessage state back to null', () => {
+        expect(executeFlowForm).toHaveState('errorMessage', null);
+      });
     });
 
-    it('calls the onExecuteFlowMock prop passing the parsed JSON coming from the testingObject field', () => {
-      expect(onExecuteFlowMock).toHaveBeenCalledWith({ foo: 'bar' });
+    describe('when the json string is not valid', () => {
+      beforeEach(() => {
+        jsonString = '';
+        executeFlowForm = shallow(<ExecuteFlowForm onExecuteFlow={onExecuteFlowMock} />);
+        executeFlowForm.instance().objectText = { value: jsonString };
+        executeFlowForm.find('form').simulate('submit', { preventDefault: () => {} });
+      });
+
+      it('does not call the onExecuteFlow prop', () => {
+        expect(onExecuteFlowMock).not.toHaveBeenCalled();
+      });
+
+      it('sets the errorMessage state', () => {
+        expect(executeFlowForm.state('errorMessage'))
+          .toContain('It seems the testing JSON object you provided is invalid');
+      });
     });
   });
 });
