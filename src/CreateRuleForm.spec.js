@@ -54,49 +54,80 @@ describe('CreateRuleForm', () => {
     });
 
     describe('when noEmptyFields returns true', () => {
-      let noEmptyFields;
+      let noEmptyFields, bodyValidator;
 
       beforeEach(() => {
         noEmptyFields = () => true;
       });
 
-      describe('and ruleValidator returns true', () => {
+      describe('and the body validator returns true', () => {
         beforeEach(() => {
-          createRuleForm = shallow(
-            <CreateRuleForm
-              onCreateRule={onCreateRuleMock}
-              ruleValidator={() => true}
-            />);
-          createRuleForm.instance().form = formMock;
-          createRuleForm.instance().noEmptyFields = noEmptyFields;
-          onCreateRule = createRuleForm.instance().onCreateRule;
-          onCreateRule(event);
+          bodyValidator = () => true;
         });
 
-        it('resets the form', () => {
-          expect(formMock.reset).toHaveBeenCalled();
+        describe('and ruleValidator returns true', () => {
+          beforeEach(() => {
+            createRuleForm = shallow(
+              <CreateRuleForm
+                onCreateRule={onCreateRuleMock}
+                ruleValidator={() => true}
+              />);
+            createRuleForm.instance().form = formMock;
+            createRuleForm.instance().noEmptyFields = noEmptyFields;
+            createRuleForm.instance().bodyValidator = bodyValidator;
+            onCreateRule = createRuleForm.instance().onCreateRule;
+            onCreateRule(event);
+          });
+
+          it('resets the form', () => {
+            expect(formMock.reset).toHaveBeenCalled();
+          });
+
+          it('calls the onCreateRule prop passing a new rule to it', () => {
+            expect(onCreateRuleMock).toHaveBeenCalledWith({
+              title: '',
+              id: '',
+              idIfTrue: '',
+              idIfFalse: '',
+              body: ''
+            });
+          });
         });
 
-        it('calls the onCreateRule prop passing a new rule to it', () => {
-          expect(onCreateRuleMock).toHaveBeenCalledWith({
-            title: '',
-            id: '',
-            idIfTrue: '',
-            idIfFalse: '',
-            body: ''
+        describe('and ruleValidator returns false', () => {
+          beforeEach(() => {
+            createRuleForm = shallow(
+              <CreateRuleForm
+                onCreateRule={onCreateRuleMock}
+                ruleValidator={() => false}
+              />);
+            createRuleForm.instance().form = formMock;
+            createRuleForm.instance().noEmptyFields = noEmptyFields;
+            onCreateRule = createRuleForm.instance().onCreateRule;
+            onCreateRule(event);
+          });
+
+          it('does not reset the form', () => {
+            expect(formMock.reset).not.toHaveBeenCalled();
+          });
+
+          it('does not call the onCreateRule prop', () => {
+            expect(onCreateRuleMock).not.toHaveBeenCalled();
           });
         });
       });
 
-      describe('when ruleValidator returns false', () => {
+      describe('and the body validator returns false', () => {
         beforeEach(() => {
+          bodyValidator = () => false;
           createRuleForm = shallow(
             <CreateRuleForm
               onCreateRule={onCreateRuleMock}
-              ruleValidator={() => false}
+              ruleValidator={() => {}}
             />);
           createRuleForm.instance().form = formMock;
           createRuleForm.instance().noEmptyFields = noEmptyFields;
+          createRuleForm.instance().bodyValidator = bodyValidator;
           onCreateRule = createRuleForm.instance().onCreateRule;
           onCreateRule(event);
         });
@@ -105,18 +136,23 @@ describe('CreateRuleForm', () => {
           expect(formMock.reset).not.toHaveBeenCalled();
         });
 
-        it('does not call call the onCreateRule prop', () => {
+        it('does not call the onCreateRule prop', () => {
+          expect(onCreateRuleMock).not.toHaveBeenCalled();
+        });
+
+        it('does not call the onCreateRule prop', () => {
           expect(onCreateRuleMock).not.toHaveBeenCalled();
         });
       });
     });
 
     describe('when noEmptyFields returns false', () => {
-      let noEmptyFields, ruleValidator, reset;
+      let noEmptyFields, ruleValidator, reset, bodyValidator;
 
       beforeEach(() => {
         noEmptyFields = () => false;
         ruleValidator = jest.fn();
+        bodyValidator = jest.fn();
         reset = jest.fn();
         createRuleForm = shallow(
           <CreateRuleForm
@@ -125,9 +161,14 @@ describe('CreateRuleForm', () => {
           />);
         createRuleForm.instance().form = formMock;
         createRuleForm.instance().noEmptyFields = noEmptyFields;
+        createRuleForm.instance().bodyValidator = bodyValidator;
         createRuleForm.instance().reset = reset;
 
         onCreateRule(event);
+      });
+
+      it('does not reset the bodyValidator', () => {
+        expect(bodyValidator).not.toHaveBeenCalled();
       });
 
       it('does not call ruleValidator', () => {
@@ -201,6 +242,35 @@ describe('CreateRuleForm', () => {
 
       it('returns false', () => {
         expect(noEmptyFieldsReturn).toBeFalsy();
+      });
+    });
+  });
+
+  describe('noEmptyFields', () => {
+    let createRuleForm, bodyValidator;
+
+    beforeEach(() => {
+      createRuleForm = shallow(<CreateRuleForm />);
+      bodyValidator = createRuleForm.instance().bodyValidator
+    });
+
+    describe('when rule.body is not valid', () => {
+      it('adds body to the error state', () => {
+        bodyValidator({ body: '' });
+        expect(createRuleForm.state().errors.body)
+          .toEqual('is not a valid javascript function');
+      });
+
+      it('returns false', () => {
+        expect(bodyValidator()).toBeFalsy();
+      });
+    });
+
+    describe('when rule.body is valid', () => {
+      it('returns true', () => {
+        expect(bodyValidator({
+          body: 'function(obj) { return obj.foo == "bar"; }'
+        })).toBeTruthy();
       });
     });
   });
