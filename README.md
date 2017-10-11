@@ -1,4 +1,4 @@
-# JS Rulez
+# JS Rulez [![Build Status](https://semaphoreci.com/api/v1/andresilveirah/jsrulez/branches/master/shields_badge.svg)](https://semaphoreci.com/andresilveirah/jsrulez)
 A simple rule processor written in Javascript using React as view layer.
 
 ## Install
