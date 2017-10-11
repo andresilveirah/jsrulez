@@ -1,5 +1,7 @@
 import React, { PureComponent } from 'react';
 
+import createFunction from './flow/createFunction';
+
 import Field from './Field';
 import ErrorMessages from './ErrorMessages';
 
@@ -24,6 +26,7 @@ class CreateRuleForm extends PureComponent {
     this.createRule = this.createRule.bind(this);
     this.onFieldChange = this.onFieldChange.bind(this);
     this.noEmptyFields = this.noEmptyFields.bind(this);
+    this.bodyValidator = this.bodyValidator.bind(this);
     this.reset = this.reset.bind(this);
   }
 
@@ -38,9 +41,22 @@ class CreateRuleForm extends PureComponent {
     return Object.keys(emptyFieldsErrors).length === 0;
   }
 
+  bodyValidator(newRule) {
+    try {
+      createFunction(newRule.body);
+    } catch (_error) {
+      this.setState({
+        errors: { body: 'is not a valid javascript function' }
+      });
+      return false;
+    }
+    return true;
+  }
+
   onCreateRule(event) {
     event.preventDefault();
     return this.noEmptyFields(this.state.rule) &&
+      this.bodyValidator(this.state.rule) &&
       this.props.ruleValidator(this.state.rule) &&
       this.createRule();
   }
