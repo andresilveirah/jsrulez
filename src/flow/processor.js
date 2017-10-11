@@ -38,7 +38,7 @@ export default function process(evaluator) {
 function* runForestRun(flow, currentRule, evaluator, testingObject) {
   if(currentRule === null) { return; }
 
-  const passed = evaluator(currentRule.body, testingObject);
+  const passed = evaluator(currentRule, testingObject);
 
   yield({ currentRule, passed });
   yield* runForestRun(
