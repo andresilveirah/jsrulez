@@ -1,29 +1,67 @@
 import React, { PureComponent } from 'react';
 
 import Field from './Field';
+import ErrorMessages from './ErrorMessages';
 
 import './CreateRuleForm.css';
+
+const isEmpty = (string) => string.trim().length === 0;
 
 class CreateRuleForm extends PureComponent {
   constructor(props) {
     super();
     this.state = {
-      id: '',
-      title: '',
-      body: '',
-      idIfTrue: '',
-      idIfFalse: ''
+      rule: {
+        id: '',
+        title: '',
+        body: '',
+        idIfTrue: '',
+        idIfFalse: ''
+      },
+      errors: {}
     };
     this.onCreateRule = this.onCreateRule.bind(this);
+    this.createRule = this.createRule.bind(this);
     this.onFieldChange = this.onFieldChange.bind(this);
+    this.noEmptyFields = this.noEmptyFields.bind(this);
+    this.reset = this.reset.bind(this);
+  }
+
+  noEmptyFields(newRule) {
+    const emptyFieldsErrors = ['id', 'title'].reduce((errors, attribute) => {
+      if (isEmpty(this.state.rule[attribute])) {
+        errors = { ...errors, [attribute]: 'Cannot be empty' }
+      }
+      return errors;
+    }, {});
+    this.setState({ errors: emptyFieldsErrors });
+    return Object.keys(emptyFieldsErrors).length === 0;
   }
 
   onCreateRule(event) {
     event.preventDefault();
-    if(this.props.ruleValidator(this.state)) {
-      this.form.reset();
-      this.props.onCreateRule(this.state);
-    };
+    return this.noEmptyFields(this.state.rule) &&
+      this.props.ruleValidator(this.state.rule) &&
+      this.createRule();
+  }
+
+  createRule() {
+    this.props.onCreateRule(this.state.rule);
+    this.reset();
+  }
+
+  reset() {
+    this.form.reset();
+    this.setState({
+        rule: {
+          id: '',
+          title: '',
+          body: '',
+          idIfTrue: '',
+          idIfFalse: ''
+        },
+        errors: {}
+    });
   }
 
   onFieldChange(event) {
@@ -62,6 +100,7 @@ class CreateRuleForm extends PureComponent {
                 <div className="CreateRuleForm-submit-container">
                   <input className='CreateRuleForm-submit col2' type="submit" name="create" value="Add new rule" />
                 </div>
+                <ErrorMessages attributesErrors={this.state.errors} />
               </Field>
             </fieldset>
           </form>
