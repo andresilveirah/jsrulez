@@ -1,6 +1,6 @@
 {
   "name": "jsrulez",
-  "version": "0.1.15",
+  "version": "0.1.16",
   "private": true,
   "description": "A simple rule processor written in Javascript using React as view layer",
   "homepage": "http://codebikeandmore.com/jsrulez",
