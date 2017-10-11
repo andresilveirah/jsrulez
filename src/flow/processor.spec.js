@@ -38,11 +38,11 @@ describe('Flow Processor', () => {
       expect(processor.next().value).toBeUndefined();
     });
 
-    it('calls the evaluator function passing the body of for each evaluated rule and the testingObject', () => {
+    it('calls the evaluator function passing each evaluated rule and the testingObject', () => {
       processor.next();
-      expect(evaluator).toHaveBeenCalledWith("body of the first rule", testingObject);
+      expect(evaluator).toHaveBeenCalledWith(firstRule, testingObject);
       processor.next();
-      expect(evaluator).toHaveBeenCalledWith("body of the last rule", testingObject);
+      expect(evaluator).toHaveBeenCalledWith(secondRule, testingObject);
     });
   });
 
