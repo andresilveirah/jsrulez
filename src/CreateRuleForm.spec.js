@@ -38,9 +38,9 @@ describe('CreateRuleForm', () => {
   });
 
   describe('onFieldChange', () => {
-    it('calls setState with event target name and value', () => {
+    it('sets rule state with event target name and value', () => {
       onFieldChange({ target: { name: 'foo', value: 'bar' } });
-      expect(createRuleForm).toHaveState('foo', 'bar');
+      expect(createRuleForm.state().rule.foo).toEqual('bar');
     });
   });
 

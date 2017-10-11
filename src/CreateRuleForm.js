@@ -65,7 +65,12 @@ class CreateRuleForm extends PureComponent {
   }
 
   onFieldChange(event) {
-    this.setState({ [event.target.name]: event.target.value });
+    this.setState({
+      rule: {
+        ...this.state.rule,
+        [event.target.name]: event.target.value
+      }
+    });
   }
 
   render() {
