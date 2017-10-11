@@ -7,7 +7,7 @@ import ValidatorMessage from './ValidatorMessage';
 class FlowExecutor extends PureComponent {
   constructor() {
     super();
-    this.state = { results: [], error: '' };
+    this.state = { results: [], error: null };
     this.onExecuteFlow = this.onExecuteFlow.bind(this);
   }
 
@@ -17,7 +17,7 @@ class FlowExecutor extends PureComponent {
       for(let { currentRule, passed } of this.props.engine(testingObject)) {
         results = [ ...results, { rule: currentRule, passed } ];
       }
-      this.setState({ results });
+      this.setState({ results, error: null });
     } catch (error) {
       this.setState({ error: error.message });
     }
